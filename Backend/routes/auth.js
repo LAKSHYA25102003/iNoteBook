@@ -3,8 +3,9 @@ const router = express.Router();
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const saltRounds = 10;
-const jwt=require("jsonwebtoken");
-const JWT_SECRET="lakshyaisagoodboy@l";
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = "lakshyaisagoodboy@l";
+const fetchuser=require("../middleware/fetchuser");
 
 // this is imported for validation
 const { body, validationResult } = require('express-validator');
@@ -12,7 +13,7 @@ const { body, validationResult } = require('express-validator');
 // create user using post request and it does not require authentication
 // first we check the validation of data
 
-
+// Route 1:
 router.post("/create-user", [
     body('name', 'Enter a valid name.').isLength({ min: 3 }),
     body('email', 'Enter a valid email.').isEmail(),
@@ -43,7 +44,7 @@ router.post("/create-user", [
 
 
 
-            const salt = await bcrypt.genSalt(10);          
+            const salt = await bcrypt.genSalt(10);
             const secPassword = await bcrypt.hash(req.body.password, salt);
 
             user = await User.create({
@@ -51,14 +52,14 @@ router.post("/create-user", [
                 email: req.body.email,
                 password: secPassword
             });
-            const data={
-                user:{
-                    id:user.id
+            const data = {
+                user: {
+                    id: user.id
                 }
             }
-            const authToken=jwt.sign(data,JWT_SECRET);
-            res.json({authToken});
-        } catch (error)  {
+            const authToken = jwt.sign(data, JWT_SECRET);
+            res.json({ authToken });
+        } catch (error) {
             console.error(error.message);
             res.status(500).send("error occured");
         }
@@ -73,5 +74,74 @@ router.post("/create-user", [
 
 
     });
+
+
+
+
+
+// route 2
+// end point for login,, there is no authentication required
+router.post("/login", [
+    body('email', 'Enter a valid email.').isEmail(),
+    body('password', 'Password can not be empty').exists(),
+],
+
+    // if ther is any errors return a bad request
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        const { email, password } = req.body;
+        try {
+            let user = await User.findOne({ email });
+            if (!user) {
+                res.status(400).json({ error: "login with correct credentials" });
+                return;
+            }
+            const comparePassword = await bcrypt.compare(password, user.password);
+            if (!comparePassword) {
+                res.status(400).json({ error: "login with correct credentials" });
+                return;
+            }
+            const data = {
+                user: {
+                    id: user.id
+                }
+            }
+            const authToken = jwt.sign(data, JWT_SECRET);
+            res.json(authToken)
+
+        } catch (error) {
+            console.error(error.message);
+            res.status(500).send("error occured");
+        }
+
+
+    });
+
+
+
+
+
+// route 3 to get the detail user of logged in user
+router.post("/get-user",fetchuser,
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        User.findOne({id:req.user.id},(err,user)=>{
+            if(err)
+            {
+                console.log("there is an error in fetching the data");
+                return ;    
+            }
+            console.log(user);
+        })
+    }
+)
+
 
 module.exports = router;
