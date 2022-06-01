@@ -138,7 +138,6 @@ router.post("/get-user",fetchuser,
                 console.log("there is an error in fetching the data");
                 return ;    
             }
-            console.log(user);
         })
     }
 )

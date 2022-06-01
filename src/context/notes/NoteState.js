@@ -55,6 +55,7 @@ const NoteState = (props) => {
             },
             body: JSON.stringify(data)
         });
+        const json = await response.json();
         getNote();
     }
 
@@ -69,11 +70,35 @@ const NoteState = (props) => {
                 // 'Content-Type': 'application/x-www-form-urlencoded',
             },
         });
+        const json = await response.json();
         getNote();
     }
 
+
+    // function to update note
+    const updateNote=async (id,title,description,tag)=>{
+        
+        const data={
+            title:title,
+            description:description,
+            tag:tag
+        }
+        const url = `http://localhost:5000/api/notes/update-note/${id}`;
+        const response = await fetch(url, {
+            method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+            headers: {
+                'Content-Type':'application/json',
+                'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI5MGNjNWI2ODdjZTVhYjgyZTY3MWE0In0sImlhdCI6MTY1Mzg0NTcwMH0.zW7vjnV2VR7WiM1uBxrFIBRu_CRz20Me6_1Gigt2ok0'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(data)
+        });
+        const json = await response.json();
+        getNote();  
+    }
+
     return (
-        <NoteContext.Provider value={{ notes, addNote, deleteNote, getNote }}>
+        <NoteContext.Provider value={{ notes, addNote, deleteNote, getNote ,updateNote}}>
             {props.children}
         </NoteContext.Provider>
     )

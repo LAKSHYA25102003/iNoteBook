@@ -1,8 +1,10 @@
+import Modal from 'react-modal';
 import React from "react";
 import Home from "./component/Home";
 import Navbar from "./component/Navbar";
 import About from "./component/About";
 import NoteState from "./context/notes/NoteState";
+
 
 
 import {
@@ -11,6 +13,8 @@ import {
   Route
 } from "react-router-dom";
 import Alert from "./component/Alert";
+
+Modal.setAppElement('#root');
 
 
 

@@ -7,11 +7,10 @@ const fetchuser=(req,res,next)=>{
     const token=req.header("auth-token");
     if(!token)
     {
-        res.status(401).send({error:"pls authenticate using valid web token"});
+        return res.status(401).send({error:"pls authenticate using valid web token"});
     }
 
     const data = jwt.verify(token,"lakshyaisagoodboy@l");
-    console.log(data);
     req.user=data.user;
     next();
 
