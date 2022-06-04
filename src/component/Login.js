@@ -48,7 +48,8 @@ function Login() {
     return (
         <div>
             {/* we make on submit on form instead of button */}
-            <form onSubmit={handleSubmit}>
+            <div className="container"><h2>Login to continue to iNoteBook</h2></div>
+            <form onSubmit={handleSubmit} className="container">
                 <div className="mb-3">
                     <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
                     <input value={cred.email} required type="email" className="form-control" name='email' id="exampleInputEmail1" aria-describedby="emailHelp" onChange={onChange}/>

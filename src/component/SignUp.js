@@ -50,7 +50,8 @@ function SignUp() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <div className="container"><h2>Create account to use iNoteBook</h2></div>
+      <form onSubmit={handleSubmit} className="container">
         <div className="mb-3">
           <label htmlFor="sname" className="form-label">Name</label>
           <input required minLength={3} value={cred.name} type="text" className="form-control" id="sname" name='name' aria-describedby="emailHelp" onChange={onChange} />
