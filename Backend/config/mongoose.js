@@ -1,6 +1,6 @@
 const mongoose=require("mongoose");
 
-const uri="mongodb+srv://lakshya:4JtflDhJG2vO6ZVt@cluster0.hmd3q.mongodb.net/inotebook?retryWrites=true&w=majority";
+const uri=`mongodb+srv://lakshya:{secrets.DATA_BASE}`;
 
  const connectToMongo=()=>{
          mongoose.connect(uri,(err)=>{
