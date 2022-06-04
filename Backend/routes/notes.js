@@ -12,7 +12,15 @@ router.get("/fetch-all-notes", fetchuser, (req, res) => {
             console.log(err);
             return;
         }
-        res.json(note);
+        if(note)
+        {
+            res.json({success:true,note:note});
+        }
+        else
+        {
+            res.json({success:false,message:"note is not made by the user yet"});
+        }
+        
     });
 })
 
@@ -28,7 +36,7 @@ router.post("/add-notes", fetchuser, [
 ], async (req, res) => {
     const errors = await validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ success:false,errors: errors.array() });
     }
     Notes.create({
         title: req.body.title,
@@ -37,10 +45,10 @@ router.post("/add-notes", fetchuser, [
         user: req.user.id
     }, function (err, note) {
         if (err) {
-            console.log(err);
+            res.json({success:false,message:err})
             return;
         }
-        res.json(note);
+        res.json({success:true,message:"Note is added successfully"});
         return;
     })
 
@@ -65,17 +73,17 @@ router.put("/update-note/:id", fetchuser, async function (req, res) {
     }
     let note = await Notes.findById(req.params.id);
     if (!note) {
-        return res.status(404).send("Not found");
+        return res.status(404).json({success:false,message:"Not Found"});
     }
     if (note.user.toString() !== req.user.id) {
-        return res.status(401).send("Not allowed");
+        return res.status(401).json({success:false,message:"Not Allowed"});
     }
     Notes.findByIdAndUpdate(req.params.id, newnote, { new: "true" }, function (err, note) {
         if (err) {
-            console.log(err);
+            res.json({success:false,message:err})
             return;
         }
-        res.json(note);
+        res.json({success:true,message:"Note is updated successfully"})
     });
 
 })
@@ -89,22 +97,22 @@ router.delete("/delete-note/:id", fetchuser, async function (req, res) {
     try{
     let note = await Notes.findById(req.params.id);
     if (!note) {
-        return res.status(404).send("Not found");
+        return res.status(404).json({success:false,message:"Not Found"});
     }
-    console.log(note);
+    
     // check that same owner of notes is deleting the notes 
     if (note.user.toString() !== req.user.id) {
-        return res.status(401).send("Not allowed");
+        return res.status(401).json({success:false,message:"Not Allowed"});
     }
     Notes.findByIdAndDelete(req.params.id, function (err, note) {
         if (err) {
             console.log(err);
             return;
         }
-        res.json({success:"note has been deleted"});
+        res.json({success:true,message:"Note has been deleted"});
     });
 } catch(error){
-    res.status(500).json({error:"internal server error"});
+    res.status(500).json({success:false,error:"internal server error"});
 }
 
 })

@@ -15,25 +15,26 @@ const Addnote = () => {
     const handleClick = (event) => {
         event.preventDefault();
         addNote(note.title,note.description,note.tag);
+        setNote({title: "", description: "", tag: ""});
     }
 
     return (
         <div className="container my-3">
             <h2>Add a Note</h2>
-            <form className='my-3'>
+            <form className='my-3' onSubmit={handleClick}>
                 <div className="form-group">
-                    <label htmlFor="exampleInputEmail1">Title</label>
-                    <input type="text" className="form-control" id="title" name='title' aria-describedby="emailHelp" onChange={onChange} />
+                    <label htmlFor="title">Title</label>
+                    <input required minLength={5} value={note.title} type="text" className="form-control" id="title" name='title' aria-describedby="emailHelp" onChange={onChange} />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="exampleInputPassword1">Description</label>
-                    <input type="text" className="form-control" id="description" name='description' onChange={onChange} />
+                    <label htmlFor="description">Description</label>
+                    <input required minLength={5} value={note.description} type="text" className="form-control" id="description" name='description' onChange={onChange} />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="exampleInputPassword1">Tag</label>
-                    <input type="text" className="form-control" id="tag" name='tag' onChange={onChange} />
+                    <label htmlFor="tag">Tag</label>
+                    <input value={note.tag} type="text" className="form-control" id="tag" name='tag' onChange={onChange} />
                 </div>
-                <button type="submit" className="btn btn-primary" onClick={handleClick} >Submit</button>
+                <button type="submit" className="btn btn-primary"  >Add Note</button>
             </form>
         </div>
     );

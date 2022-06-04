@@ -1,6 +1,4 @@
-import React,{useContext} from 'react'
-import NoteContext from '../context/notes/NoteContext'
-import { useEffect } from 'react'
+import React from 'react'
 
 const About=() =>{
   // react-hooks/exhaustive-deps
@@ -11,8 +9,7 @@ const About=() =>{
   // },[]);
   return (
     <div>
-      this is about about page.
-      
+      this is about page.   
     </div>
   )
 }

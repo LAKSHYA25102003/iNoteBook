@@ -1,7 +1,11 @@
 import NoteContext from "./NoteContext";
 import { useState } from "react";
+import AlertContext from '../Alert/AlertContext';
+import { useContext } from 'react';
 
 const NoteState = (props) => {
+    const context=useContext(AlertContext);
+    const {handleAlert}=context;
 
     // const s1={
     //     name:"lakshya",
@@ -28,13 +32,17 @@ const NoteState = (props) => {
         const response = await fetch(url, {
             method: 'GET', // *GET, POST, PUT, DELETE, etc.
             headers: {
-                'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI5MGNjNWI2ODdjZTVhYjgyZTY3MWE0In0sImlhdCI6MTY1Mzg0NTcwMH0.zW7vjnV2VR7WiM1uBxrFIBRu_CRz20Me6_1Gigt2ok0'
+                'auth-token': localStorage.getItem("Token")
                 // 'Content-Type': 'application/x-www-form-urlencoded',
             },
         });
 
         const json = await response.json(); // parses JSON response into native JavaScript objects
-        setNotes(json);
+        if(json.success)
+        {
+            setNotes(json.note);
+        }
+        
     }
 
 
@@ -50,12 +58,20 @@ const NoteState = (props) => {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             headers: {
                 'Content-Type':'application/json',
-                'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI5MGNjNWI2ODdjZTVhYjgyZTY3MWE0In0sImlhdCI6MTY1Mzg0NTcwMH0.zW7vjnV2VR7WiM1uBxrFIBRu_CRz20Me6_1Gigt2ok0'
+                'auth-token': localStorage.getItem("Token")
                 // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: JSON.stringify(data)
         });
         const json = await response.json();
+        if(json.success)
+        {
+            handleAlert("Note is added successfully!","success");
+        }
+        else
+        {
+            handleAlert("Error: Note is not added.Please write atleast five character in every field!","danger");
+        }
         getNote();
     }
 
@@ -66,12 +82,21 @@ const NoteState = (props) => {
         const response = await fetch(url, {
             method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
             headers: {
-                'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI5MGNjNWI2ODdjZTVhYjgyZTY3MWE0In0sImlhdCI6MTY1Mzg0NTcwMH0.zW7vjnV2VR7WiM1uBxrFIBRu_CRz20Me6_1Gigt2ok0'
+                'auth-token': localStorage.getItem("Token")
                 // 'Content-Type': 'application/x-www-form-urlencoded',
             },
         });
         const json = await response.json();
+        if(json.success)
+        {
+            handleAlert("Note is deleted successfully!","success");   
+        }
+        else
+        {
+            handleAlert("Error:Note is note deleted!","danger");
+        }
         getNote();
+
     }
 
 
@@ -88,13 +113,21 @@ const NoteState = (props) => {
             method: 'PUT', // *GET, POST, PUT, DELETE, etc.
             headers: {
                 'Content-Type':'application/json',
-                'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI5MGNjNWI2ODdjZTVhYjgyZTY3MWE0In0sImlhdCI6MTY1Mzg0NTcwMH0.zW7vjnV2VR7WiM1uBxrFIBRu_CRz20Me6_1Gigt2ok0'
+                'auth-token': localStorage.getItem("Token")
                 // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: JSON.stringify(data)
         });
         const json = await response.json();
-        getNote();  
+        if(json.success)
+        {
+            handleAlert("Note is updated successfully!","success");   
+        }
+        else
+        {
+            handleAlert("Error:Note is note updated!","danger");
+        }
+        getNote();
     }
 
     return (

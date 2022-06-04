@@ -4,7 +4,9 @@ import Home from "./component/Home";
 import Navbar from "./component/Navbar";
 import About from "./component/About";
 import NoteState from "./context/notes/NoteState";
-
+import Login from './component/Login';
+import AuthState from './context/authentication/AuthState';
+import AlertState from './context/Alert/AlertState';
 
 
 import {
@@ -13,6 +15,7 @@ import {
   Route
 } from "react-router-dom";
 import Alert from "./component/Alert";
+import SignUp from './component/SignUp';
 
 Modal.setAppElement('#root');
 
@@ -23,10 +26,12 @@ function App() {
   return (
     
     <>
+    <AlertState>
+    <AuthState>
       <NoteState>
         <Router>
           <Navbar />
-          <Alert message="This is amazing React course."/>
+          <Alert/>
           <div className="container">
             <Routes>
               <Route exact path="/" element={<Home />} />
@@ -34,9 +39,17 @@ function App() {
             <Routes>
               <Route exact path="/about" element={<About />} />
             </Routes>
+            <Routes>
+              <Route exact path="/login" element={<Login />} />
+            </Routes>
+            <Routes>
+              <Route exact path="/sign-up" element={<SignUp />} />
+            </Routes>
           </div>
         </Router>
       </NoteState>
+      </AuthState>
+      </AlertState>
     </>
 
 
